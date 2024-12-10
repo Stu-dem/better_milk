@@ -1,5 +1,9 @@
 # Use an official Node.js runtime as a parent image
+
+
 FROM node:23-alpine3.19
+
+RUN export DOCKER_BUILDKIT=1
 
 # Set the working directory
 WORKDIR /app
@@ -16,5 +20,5 @@ COPY . .
 # Expose the application port
 EXPOSE 3000
 
-# Run the application
+# Run the application in development mode
 CMD ["npm", "run", "dev"]
