@@ -16,6 +16,7 @@ services:
       - postgres
       - redis
       - mailpit
+      - frontend
     volumes:
       - ./backend:/app:z
     env_file:
