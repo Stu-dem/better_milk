@@ -2,6 +2,8 @@
 
 import * as z from "zod";
 
+import { useTransition, useState } from "react";
+
 import { CardWrapper } from "./CardWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,11 +20,17 @@ import {
 } from "@/components/ui/form";
 
 import { LoginSchema } from "@/schemas";
-import { Button } from "../button";
-import { FormError } from "../form/FormError";
-import { FormSuccess } from "../form/FormSuccess";
+import { Button } from "@/components/ui/button";
+import { FormError } from "@/components/ui/form/FormError";
+import { FormSuccess } from "@/components/ui/form/FormSuccess";
+
+import { login } from "@/actions/login";
 
 export const LoginForm = () => {
+
+  const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | undefined>(undefined)
+  const [success, setSuccess] = useState<string | undefined>(undefined)
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -33,7 +41,17 @@ export const LoginForm = () => {
   })
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    console.log(values)
+    setError(undefined)
+    setSuccess(undefined)
+
+    startTransition(() => {
+      login(values)
+        .then((data) => {
+          setError(data.error ?? undefined)
+          setSuccess(data.success ?? undefined)
+        })
+    })
+    
   }
 
   return (
@@ -53,6 +71,7 @@ export const LoginForm = () => {
                 <Input 
                   {...field}
                   type="email"
+                  disabled={isPending}
                   placeholder="john.doe@clover.co.za"
                 />
               </FormControl>
@@ -68,6 +87,7 @@ export const LoginForm = () => {
                 <Input 
                   {...field}
                   type="password"
+                  disabled={isPending}
                   placeholder=""
                 />
               </FormControl>
@@ -75,9 +95,9 @@ export const LoginForm = () => {
             </FormItem>
             )}
           />
-          <FormError message={"Invalid credentials"} />
-          <FormSuccess message={"Success"} />
-          <Button type="submit" className="w-full">Login</Button>
+          <FormError message={error} />
+          <FormSuccess message={success} />
+          <Button type="submit" className="w-full" disabled={isPending}>Login</Button>
         </form>
       </Form>
     </CardWrapper>
