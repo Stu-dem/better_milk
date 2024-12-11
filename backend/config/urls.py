@@ -49,6 +49,7 @@ urlpatterns += [
 urlpatterns += [
     path("admin/", admin.site.urls),
     path("api/auth/", include("dj_rest_auth.urls")),
+    path('api/registration/', include('dj_rest_auth.registration.urls'))
 ]
 
 if settings.DEBUG:
