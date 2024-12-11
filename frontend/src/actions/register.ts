@@ -5,6 +5,7 @@ import axios from "axios";
 // import bcrypt from "bcrypt";
 
 import { RegisterSchema } from "@/schemas";
+import { checkUserExists } from "@/data/user";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -18,23 +19,10 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const { email, password_1, password_2, first_name, last_name } = validatedFields.data;
   // const hashedPassword_1 = await bcrypt.hash(password_1, 10);
 
-  try {
-    const existingUserResponse = await axios.post(
-      "http://localhost:8000/api/authutils/existingUser/",
-      {
-        email: email,
-      }
-    );
+  const existingUserResponse = await checkUserExists(email);
 
-    if (existingUserResponse.data.user_exists) {
-      return { error: "User already exists" };
-    }
-  } catch (error) {
-    
-    if (error.response.status != 404) {
-      console.error("Error checking existing user:", error);
-    }
-    
+  if (existingUserResponse.error) {
+    return { error: existingUserResponse.error };
   }
 
   try {
