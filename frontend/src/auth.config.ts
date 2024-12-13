@@ -24,10 +24,8 @@ export default {
 
           if (loginResponse.status === 200) {
             const userData = {
-              email: loginResponse.data.user.email,
-              name: `${loginResponse.data.user.first_name} ${loginResponse.data.user.last_name}`,
+              ...loginResponse.data.user,
             }
-            console.log("LOGIN RESPONSE: ", loginResponse.data.user)
             return userData;
           }
         } catch (error) {
