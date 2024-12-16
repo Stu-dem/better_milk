@@ -1,18 +1,28 @@
 from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
 
-from backend.users.models import User
+from backend.users.models import User, Role
+from backend.geography.serializers import BranchSerializer
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = ["name", "code"]
 
 
 class UserSerializer(serializers.ModelSerializer[User]):
+    roles = RoleSerializer(many=True)
+    branches = BranchSerializer(many=True)
     class Meta:
         model = User
                 
-        fields = ["first_name", "last_name", "is_active", "is_staff", "is_superuser", "email", "id"]
+        fields = ["first_name", "last_name", "is_active", "email", "id", "roles", "branches"]
 
         extra_kwargs = {
             "url": {"view_name": "api:user-detail", "lookup_field": "pk"},
         }
+        
+
 
 class CustomRegisterSerializer(RegisterSerializer):
     first_name = serializers.CharField(required=True)

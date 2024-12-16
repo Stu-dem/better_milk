@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .forms import UserAdminChangeForm
 from .forms import UserAdminCreationForm
-from .models import User
+from .models import User, Role
 
 if settings.DJANGO_ADMIN_FORCE_ALLAUTH:
     # Force the `admin` sign in process to go through the `django-allauth` workflow:
@@ -14,6 +14,7 @@ if settings.DJANGO_ADMIN_FORCE_ALLAUTH:
     admin.autodiscover()
     admin.site.login = secure_admin_login(admin.site.login)  # type: ignore[method-assign]
 
+admin.site.register(Role)
 
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
@@ -31,6 +32,8 @@ class UserAdmin(auth_admin.UserAdmin):
                     "is_superuser",
                     "groups",
                     "user_permissions",
+                    "roles",
+                    "branches",
                 ),
             },
         ),

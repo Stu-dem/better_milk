@@ -91,6 +91,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "backend.users",
+    "backend.geography",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -359,15 +360,15 @@ SPECTACULAR_SETTINGS = {
 
 # djangorestframework-simplejwt
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
 # dj-rest-auth
 REST_AUTH = {
     "USE_JWT": True,
-    "JWT_AUTH_COOKIE": "_auth",  # Name of access token cookie
-    "JWT_AUTH_REFRESH_COOKIE": "_refresh", # Name of refresh token cookie
+    # "JWT_AUTH_COOKIE": "_auth",  # Name of access token cookie
+    # "JWT_AUTH_REFRESH_COOKIE": "_refresh", # Name of refresh token cookie
     "JWT_AUTH_HTTPONLY": False,  # Makes sure refresh token is sent
     "REGISTER_SERIALIZER":"backend.users.api.serializers.CustomRegisterSerializer",
     "USER_DETAILS_SERIALIZER": "backend.users.api.serializers.UserSerializer",
