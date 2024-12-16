@@ -24,7 +24,9 @@ export default {
 
           if (loginResponse.status === 200) {
             const userData = {
-              ...loginResponse.data.user,
+              user: {...loginResponse.data.user},
+              access: loginResponse.data.access,
+              refresh: loginResponse.data.refresh
             }
             return userData;
           }
