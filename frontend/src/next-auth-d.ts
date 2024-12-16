@@ -5,7 +5,7 @@ export type ExtendedUser = DefaultSession["user"] & {
     first_name: string;
     last_name: string;
     is_active: boolean;
-    is_admin: boolean;
+    is_staff: boolean;
 }
 
 declare module "next-auth" {

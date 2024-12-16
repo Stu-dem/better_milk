@@ -1,16 +1,15 @@
 "use server"
 
-import { currentUser } from "@/lib/auth";
-
 import UserInfo from "@/components/UserInfo";
+import { getCurrentUser } from "@/data/user";
 
 const ServerPage = async () => {
 
-    const user = await currentUser();
+    const user = await getCurrentUser();
 
     return (
         <div>
-            <UserInfo user={user} label= "💻Server component" />
+            {user ? <UserInfo user={user} label= "💻Server component" /> : ""}
         </div>
     );
 }

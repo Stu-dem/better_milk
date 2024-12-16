@@ -22,7 +22,7 @@ const UserInfo = ({ user, label }: UserInfoProps) => {
             ID
           </p>
           <p className="truncate text-xs max-w-[180px] font-mono p-1 bg-slate-100 rounded-md">
-            {user?.sub}
+            {user?.sub || user?.id}
           </p>
         </div>
         <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
@@ -51,12 +51,12 @@ const UserInfo = ({ user, label }: UserInfoProps) => {
         </div>
         <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
           <p className="text-sm font-medium">
-            Is Admin
+            Is active
           </p>
           <Badge 
-            variant={user?.is_admin ? "success" : "destructive"}
+            variant={user?.is_active ? "success" : "destructive"}
           >
-            {user?.is_admin ? "ON" : "OFF"}
+            {user?.is_active ? "YES" : "NO"}
           </Badge>
         </div>
       </CardContent>
