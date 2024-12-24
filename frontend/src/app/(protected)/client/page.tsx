@@ -1,11 +1,13 @@
 "use client"
 
-import { useCurrentUser } from "@/hooks/useCurrentUser";
 import UserInfo from "@/components/UserInfo";
 
 const ClientPage = () => {
 
-    const user = useCurrentUser();
+    const user = {
+        name: "Client User",
+        email: ""
+    }
 
     return (
         <div>

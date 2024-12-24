@@ -1,7 +1,9 @@
 "use server"
-
-import { signOut } from "@/auth"
+import { cookies } from 'next/headers'
 
 export const logout = async () => {
-    await signOut();
+    let cookieStore = await cookies()
+    cookieStore.delete("auth_access_token")
+    cookieStore.delete("auth_refresh_token")
+    return {success: "Logout successful!"}
 }

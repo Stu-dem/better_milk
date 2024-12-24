@@ -1,16 +1,14 @@
 import axios from "axios";
-
-import { auth } from "@/auth";
+import { cookies } from "next/headers";
 
 export const getCurrentUser = async () => {
-  const session = await auth();
-
+  const cookieStore = await cookies();
   // console.log({session})
 
   try {
     const existingUserResponse = await axios.get(
       "http://localhost:8000/api/users/me/",
-      { headers: { Authorization: "Bearer " + session?.access_token } }
+      { headers: { Authorization: "Bearer " + cookieStore?.auth_access_token } }
     );
 
     // console.log("Existing user response: ", existingUserResponse.data);

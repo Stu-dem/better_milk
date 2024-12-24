@@ -9,12 +9,14 @@ import {
 
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { AvatarIcon, ExitIcon } from "@radix-ui/react-icons";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { LogoutButton } from "./LogoutButton";
 
 export const UserButton = () => {
-  const user = useCurrentUser();
-
+  const user = {
+    name: "Client User",
+    email: "",
+    image: "",
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>

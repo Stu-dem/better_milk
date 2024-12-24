@@ -2,11 +2,12 @@
 
 import * as z from "zod";
 
-import { useTransition, useState } from "react";
+import { useTransition, useState, useEffect } from "react";
 
 import { CardWrapper } from "./CardWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 import {Input} from "@/components/ui/input";
 
@@ -31,6 +32,7 @@ export const LoginForm = () => {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | undefined>(undefined)
   const [success, setSuccess] = useState<string | undefined>(undefined)
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -39,6 +41,16 @@ export const LoginForm = () => {
       password: ""
     }
   })
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        router.push("/settings")
+      }, 500)
+
+      return () => clearTimeout(timer)
+    }
+  }, [success])
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError(undefined)
@@ -49,9 +61,10 @@ export const LoginForm = () => {
         .then((data) => {
           setError(data.error ?? undefined)
           setSuccess(data.success ?? undefined)
+          console.log({data})
         })
     })
-    
+
   }
 
   return (
