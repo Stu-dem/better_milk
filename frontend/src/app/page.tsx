@@ -2,6 +2,9 @@ import { Button } from "@/components/ui/button"
 import { LoginButton } from "@/components/ui/auth/LoginButton";
 
 export default function Home() {
+
+  
+
   return (
     <main className="flex h-full flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-200 to-blue-500">
         <div className="space-y-6">

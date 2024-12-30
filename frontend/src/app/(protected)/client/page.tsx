@@ -1,19 +1,20 @@
-"use client"
+"use client";
 
+import useUser from "@/queries/getUser";
 import UserInfo from "@/components/UserInfo";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 const ClientPage = () => {
+  const {data, status, error} =  useUser()
 
-    const user = {
-        name: "Client User",
-        email: ""
-    }
 
-    return (
-        <div>
-            <UserInfo user={user} label= "🧑‍💻Client component" />
-        </div>
-    );
-}
+  return (
+    <div>
+      {status === "success" && <UserInfo user={data} label="🧑‍💻Client component" />}
+      {status === "error" && JSON.stringify(error.message)}
+      {status === "pending" && <LoadingSpinner />}
+    </div>
+  );
+};
 
 export default ClientPage;

@@ -1,14 +1,33 @@
-import { ExtendedUser } from "@/next-auth-d";
 
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Badge } from "./ui/badge";
 
+interface Role {
+  id: string;
+  name: string;
+  code: string;
+}
+
+interface Branch {
+  id: string;
+  name: string;
+  code: string;
+}
 interface UserInfoProps {
-    user?: ExtendedUser;
+    user: {
+      id: string;
+      first_name: string;
+      last_name: string;
+      email: string;
+      is_active: boolean;
+      roles: Role[];
+      branches: Branch[];
+    }
     label: string;
 }
 
 const UserInfo = ({ user, label }: UserInfoProps) => {
+
     return (
         <Card className="w-[600] shadow-md">
             <CardHeader>
@@ -22,7 +41,7 @@ const UserInfo = ({ user, label }: UserInfoProps) => {
             ID
           </p>
           <p className="truncate text-xs max-w-[180px] font-mono p-1 bg-slate-100 rounded-md">
-            {user?.sub || user?.id}
+            {user?.id}
           </p>
         </div>
         <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">

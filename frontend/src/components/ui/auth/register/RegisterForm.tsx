@@ -21,8 +21,7 @@ import {
 
 import { RegisterSchema } from "@/schemas";
 import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/ui/form/FormError";
-import { FormSuccess } from "@/components/ui/form/FormSuccess";
+import { FormError, FormSuccess } from "@/components/ui/form-messages";
 
 import { register } from "@/actions/register";
 

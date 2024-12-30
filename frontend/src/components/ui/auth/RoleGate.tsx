@@ -5,7 +5,7 @@ interface RoleGateProps {
     userRole?: string
 }
 
-import { FormError } from "../form/FormError"
+import { FormError } from "../form-messages"
 
 export const RoleGate = ({ children, userRole }: RoleGateProps) => {
 
