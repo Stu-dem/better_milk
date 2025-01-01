@@ -19,14 +19,13 @@ import {
   FormField,
 } from "@/components/ui/form";
 
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Button } from "@/components/ui/button";
 
 import { CardWrapper } from "@/components/ui/auth";
 import { LoginSchema } from "@/schemas";
 import { FormError, FormSuccess } from "@/components/ui/form-messages";
 
-import { login } from "@/actions/login";
+import { POST } from "@/actions/login";
 import useUser from "@/queries/getUser";
 
 export const LoginForm = () => {
@@ -50,8 +49,13 @@ export const LoginForm = () => {
     setSuccess(undefined);
 
     startTransition(() => {
-      login(values).then((loginResponse) => {
-        console.log("LOGIN RESPONSE: ", loginResponse);
+      POST(new Request('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(values),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })).then((loginResponse) => {
         setError(loginResponse?.error ?? undefined);
         setSuccess(loginResponse?.success ?? undefined);
 
@@ -67,6 +71,7 @@ export const LoginForm = () => {
 
   useEffect(() => {
     if (success) {
+      console.log("Trying to redirect to settings");
       const timer = setTimeout(() => {
         router.push("/settings");
       }, 500);
@@ -122,13 +127,9 @@ export const LoginForm = () => {
           />
           <FormError message={error} />
           <FormSuccess message={success} />
-          {status === "pending" ? (
-            <LoadingSpinner />
-          ) : (
             <Button type="submit" className="w-full" disabled={isPending}>
               Login
             </Button>
-          )}
         </form>
       </Form>
     </CardWrapper>

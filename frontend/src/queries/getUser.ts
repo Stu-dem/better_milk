@@ -1,15 +1,17 @@
 import axios from "axios";
 import { getCookie } from "cookies-next/client";
 import { useQuery } from "@tanstack/react-query";
+import { getUserCredentials } from "@/lib/auth/getUserCredentials";
 
 const getUserData = async () => {
-  const accessToken = getCookie("auth_access_token");
-  console.log("Access Token", accessToken);
+
+  console.log("Getting user data...")
+  const tokens = getUserCredentials()
 
   return await axios
     .get("http://localhost:8000/api/users/me/", {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${tokens?.access}`,
       },
     })
     .then((response) => response.data)
@@ -22,6 +24,7 @@ function useUser() {
   return useQuery({
     queryKey: ["user"],
     queryFn: getUserData,
+    staleTime: 1000*5
   });
 }
 

@@ -13,6 +13,7 @@ interface Branch {
   name: string;
   code: string;
 }
+
 interface UserInfoProps {
     user: {
       id: string;
