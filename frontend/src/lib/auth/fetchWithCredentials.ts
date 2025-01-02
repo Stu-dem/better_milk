@@ -18,9 +18,6 @@ export default async function fetchWithCredentials(
     authSummary = await checkTokens(userCredentials);
   }
 
-  console.log({authSummary})
-  console.log({userCredentials})
-
   // Check if user is logged in and tokens are present
   if (!authSummary.loggedIn || !userCredentials) {
     console.log("Authentication failed for this request...")
@@ -30,11 +27,8 @@ export default async function fetchWithCredentials(
     };
   }
 
-  const url = `${BACKEND_URL}${path}`;
-  console.log(BACKEND_URL)
-  console.log({url})
-
   // Attempt to fetch data with current access token
+  const url = `${BACKEND_URL}${path}`;
   const requestToFetch = makeFetch(url, userCredentials.access, init);
   return await requestToFetch();
 

@@ -5,16 +5,14 @@ export const getTokens = async () => {
 
   try {
     const tokens = await getCookie("authTokens");
+    const userCredentials = JSON.parse(tokens as string);
 
-    console.log({tokens})
-
-    if (!tokens) {
+    if (!userCredentials) {
       return null;
     }
 
-
-    const userCredentials = JSON.parse(tokens as string);
     return userCredentials;
+    
   } catch (error) {
     console.error("Error getting tokens: ", error);
     return null;

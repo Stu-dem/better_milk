@@ -37,7 +37,6 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
       }
     );
 
-    console.log(response);
   } catch (error) {
     console.error("Error registering user:", error);
     return { error: "Error registering user" };

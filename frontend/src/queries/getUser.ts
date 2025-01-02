@@ -6,7 +6,6 @@ const getUserData = async () => {
     method: "GET",
   })
     .then((data) => {
-      console.log({ data });
       return data;
     })
     .catch((error) => {
@@ -14,11 +13,12 @@ const getUserData = async () => {
     });
 };
 
-function useUser() {
+function useUser(enabled = true) {
   return useQuery({
     queryKey: ["user"],
     queryFn: getUserData,
-    staleTime: 1000 * 5,
+    staleTime: 1000 * 60,
+    enabled,
   });
 }
 

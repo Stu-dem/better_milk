@@ -28,6 +28,7 @@ import { FormError, FormSuccess } from "@/components/ui/form-messages";
 import { POST } from "@/actions/login";
 import useUser from "@/queries/getUser";
 
+
 export const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>(undefined);
@@ -67,11 +68,9 @@ export const LoginForm = () => {
     });
   };
 
-  const { status } = useUser();
-
   useEffect(() => {
     if (success) {
-      console.log("Trying to redirect to settings");
+      refetch();
       const timer = setTimeout(() => {
         router.push("/settings");
       }, 500);
@@ -79,6 +78,9 @@ export const LoginForm = () => {
       return () => clearTimeout(timer);
     }
   }, [success, user]);
+
+
+  const { data, refetch } = useUser(false);
 
   return (
     <CardWrapper
