@@ -1,84 +1,60 @@
-import { NextRequest } from "next/server";
-import { getUserCredentials } from "@/lib/auth/getUserCredentials";
+import { getTokens } from "./manageTokensClient";
+import { refreshTokens } from "./refreshToken";
+import { checkTokens } from "./checkTokens";
 
-import { getTokenExpiry } from "./getTokenExpiry";
-import saveUserTokens from "./saveUserTokens";
-
-const BACKEND_URL = process.env.BACKEND_URL;
-const ACCESS_TOKEN_LIFETIME = Number(process.env.ACCESS_TOKEN_LIFETIME) || 3600;
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default async function fetchWithCredentials(
-    path: string,
-    init: RequestInit | undefined,
-    req: NextRequest
+  path: string,
+  init: RequestInit | undefined,
 ) {
-    const userCredentials = getUserCredentials();
-    
-    if (!userCredentials) {
-        return {
-            message: "No user credentials found",
-            status: 401,
-        }
-    }
+  let userCredentials = await getTokens();
+  let authSummary = await checkTokens(userCredentials);
 
-    const requestToFetch = makeFetch(
-        path,
-        userCredentials.access,
-        init
-    )
+  // Check if tokens need to be updated
+  if (authSummary.updateTokens) {
+    await refreshTokens(userCredentials);
+    userCredentials = await getTokens();
+    authSummary = await checkTokens(userCredentials);
+  }
 
-    const tokenExpires = new Date(userCredentials.accessTokenExpires);
+  console.log({authSummary})
+  console.log({userCredentials})
 
-    if (tokenExpires.getTime() - (Date.now() + ACCESS_TOKEN_LIFETIME*1000) < 0) {
-        const newAccessToken = await refresh(userCredentials.refresh);
+  // Check if user is logged in and tokens are present
+  if (!authSummary.loggedIn || !userCredentials) {
+    console.log("Authentication failed for this request...")
+    return {
+      message: "No user credentials found",
+      status: 401,
+    };
+  }
 
-        if ("access" in newAccessToken) {
-            const newTokens = {
-                access: newAccessToken.access,
-                refresh: userCredentials.refresh,
-                accessExpires: getTokenExpiry("access"),
-                refreshExpires: getTokenExpiry("refresh"),
-            }
-            saveUserTokens(newTokens);
+  const url = `${BACKEND_URL}${path}`;
+  console.log(BACKEND_URL)
+  console.log({url})
 
-            return await requestToFetch(newAccessToken.access);
-        }
-        return newAccessToken;
-    }
-
-    return await requestToFetch();
+  // Attempt to fetch data with current access token
+  const requestToFetch = makeFetch(url, userCredentials.access, init);
+  return await requestToFetch();
 
 }
-
-
 
 function makeFetch(
-    path: string,
-    accessToken: string,
-    init: RequestInit | undefined
-): (newAccessToken?: string) => Promise<any> {
-    return async function (newAccessToken?: string) {
-        return fetch(`${BACKEND_URL}${path}`, {
-            ...init,
-            headers: {
-                Authorization: `Bearer ${newAccessToken ?? accessToken}`,
-            },
-            ...init,
-        }).then((res) => res.json());
-    }
+  path: string,
+  accessToken: string,
+  init: RequestInit | undefined
+): () => Promise<any> {
+  return async function () {
+    return fetch(
+      path,
+      {
+      ...init,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      ...init,
+    }).then((res) => res.json());
+  };
 }
-
-
-async function refresh(rt: string) {
-    return new Promise<any>((resolve) => {
-      // Make a POST request to the token refresh endpoint
-      fetch(BACKEND_URL + "/auth/refresh", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${rt}`,
-        },
-      })
-        .then((res) => res.json())
-        .then((json) => resolve(json));
-    });
-  }
