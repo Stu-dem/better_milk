@@ -27,7 +27,7 @@ import { FormError, FormSuccess } from "@/components/ui/form-messages";
 
 import { POST } from "@/actions/login";
 import useUser from "@/queries/getUser";
-
+import {toast} from "sonner";
 
 export const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -71,6 +71,7 @@ export const LoginForm = () => {
   useEffect(() => {
     if (success) {
       refetch();
+      toast.success(success);
       const timer = setTimeout(() => {
         router.push("/settings");
       }, 500);
