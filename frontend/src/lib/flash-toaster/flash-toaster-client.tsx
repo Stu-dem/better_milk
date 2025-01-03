@@ -8,10 +8,6 @@ export default function FlashToasterClient(props: {
     useEffect(() => {
         if (!!props.flash) {
             const { type, message } = JSON.parse(props.flash);
-            console.log({
-                type,
-                message
-            })
             if (type === "success") {
                 toast.success(message);
             } else if (type === "error") {
