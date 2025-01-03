@@ -16,7 +16,6 @@ services:
       - postgres
       - redis
       - mailpit
-      - frontend
     volumes:
       - ./backend:/app:z
     env_file:
@@ -87,16 +86,29 @@ services:
     command: /start-flower
     working_dir: /app
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: ./compose/local/Dockerfile
-    image: frontend_local_nextjs
-    container_name: frontend_local_nextjs
-    volumes:
-      - ./frontend:/app:z
-    ports:
-      - '3000:3000'
-    env_file:
-      - ./frontend/.envs/.local
-    working_dir: /app
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: ./compose/local/Dockerfile
+  #   image: frontend_local_nextjs
+  #   container_name: frontend_local_nextjs
+  #   volumes:
+  #     - ./frontend:/app:z
+  #     - /app/node_modules
+  #   ports:
+  #     - '3000:3000'
+  #   environment:
+  #     - NODE_ENV=development
+  #   command: npm run dev
+    # build:
+    #   context: ./frontend
+    #   dockerfile: ./compose/local/Dockerfile
+    # image: frontend_local_nextjs
+    # container_name: frontend_local_nextjs
+    # volumes:
+    #   - ./frontend:/app:z
+    # ports:
+    #   - '3000:3000'
+    # env_file:
+    #   - ./frontend/.envs/.local
+    # working_dir: /app
